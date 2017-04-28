@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Tron (4P)</title>
+
+	</head>
+	<style>
+		html, body {
+			-webkit-overflow-scrolling: touch; /* Chrome/Safari */
+			overflow: hidden;
+		}
+		canvas {
+   			padding: 0;
+			margin: auto;
+    		display: block;
+    		width: 70vw;
+    		height: 35vw;
+		}
+		
+		h1 {
+			color: yellow;
+			margin: auto;
+			text-align: center;
+			font-size: 4.5vw;
+			font-family: Courier New, monospace;
+			font-weight: normal;
+		}
+	</style>
+	<body style="background-color: #000099;">
+		<h1>TRON</h1>
+		<canvas id="myCanvas" width="900" height="550" style="border:2px solid #ffff00;"></canvas>
+		<script>
+			var c = document.getElementById("myCanvas");
+			var ctx = c.getContext("2d");
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(0, 0, 900, 550);
+		</script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+		<script>
+			
+			var socket = io();
+			
+			var upKeyPressed = false;
+			var downKeyPressed = false;
+			var rightKeyPressed = false;
+			var leftKeyPressed = false;
+			
+			
+			window.onkeydown = function(e){
+				var key=e.keyCode ? e.keyCode : e.which;
+				if (key === 87  || key === 119) upKeyPressed = true;
+				if (key === 83  || key === 115) downKeyPressed = true;
+				if (key === 68  || key === 100) rightKeyPressed = true;
+				if (key === 65  || key === 97) leftKeyPressed = true;
+				sendData();
+			}
+			
+			window.onkeyup = function(e){
+				var key=e.keyCode ? e.keyCode : e.which;
+				if (key === 87  || key === 119) upKeyPressed = false;
+				if (key === 83  || key === 115) downKeyPressed = false;
+				if (key === 68  || key === 100) rightKeyPressed = false;
+				if (key === 65  || key === 97) leftKeyPressed = false;
+				sendData();
+			}
+			
+			function sendData(){
+				var data = [upKeyPressed, downKeyPressed, rightKeyPressed, leftKeyPressed];
+				socket.emit('user_input_state', data[0] + " " + data[1] + " " + data[2] + " " + data[3]);
+			}
+		</script>
+	</body>
+</html>
